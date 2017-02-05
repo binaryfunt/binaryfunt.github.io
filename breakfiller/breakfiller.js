@@ -22,6 +22,7 @@ $(document).ready(function() {
             description: article.description
         };
         console.log(template);
+        var html = Mustache.render(template, article);
         // $.template("template", template);
         // $.tmpl("template", article)
         //     .appendTo(mainDiv);
