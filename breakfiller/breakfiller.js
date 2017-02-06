@@ -8,7 +8,12 @@ $(document).ready(function() {
             "the-verge",
             "reuters",
             "national-geographic",
-            "new-scientist"
+            "new-scientist",
+            "bloomberg",
+            "cnbc",
+            "cnn",
+            "engadget",
+            "financial-times"
         ],
         sort = "top",
         weatherAPIKey = "30fe2db74a3ccfa7d32842547855dc2f",
