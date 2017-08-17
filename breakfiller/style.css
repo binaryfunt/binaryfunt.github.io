@@ -1,3 +1,6 @@
+
+@import url('https://fonts.googleapis.com/css?family=Assistant:400,600');
+
 /* ------- Defaults ------- */
 
 * {
@@ -64,7 +67,7 @@ body {
   width: 100%;
   background: #FFF;
   color: #202020;
-  font-family: "Helvetica Neue", "Arial Nova", "Segoe UI", Roboto, Helvetica, Arial, FreeSans, sans-serif;
+  font-family: Assistant, "Helvetica Neue", "Arial Nova", "Segoe UI", Roboto, Helvetica, Arial, FreeSans, sans-serif;
 }
 
 
@@ -72,10 +75,38 @@ body {
   max-width: 800px;
   margin: 0 auto;
 }
+
+.article .top-bar {
+  display: flex;
+  justify-content: space-between;
+}
+.article .top-bar span {
+  text-transform: uppercase;
+  font-size: 22px;
+  font-weight: 600;
+}
+.article .top-bar .logo {
+  height: 22px;
+  width: auto;
+  margin: 0;
+}
+
+.article .image {
+  height: 60vh;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
 .article img {
+  display: block;
   max-width: 100%;
   max-height: 80vh;
-  margin-bottom: 10px;
+  /*margin-bottom: 10px;*/
+}
+.article .text, .article .top-bar {
+  padding: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.7);
 }
 .article h2 {
   font-size: 22px;
@@ -108,7 +139,7 @@ body {
   height: 100%;
   width: 100%;
   -webkit-animation: background 6s ease infinite;
-          animation: background 6s ease infinite;
+  animation: background 6s ease infinite;
 }
 
 @-webkit-keyframes background {
@@ -138,42 +169,59 @@ body {
 
 .bg-circle {
   position: fixed;
+  width: 100px;
+  height: 100px;
   z-index: -1;
   border-radius: 50%;
   background: transparent;
-  border: 60px solid rgba(0, 0, 0, 0);
+  border: 60px solid #09F;/*rgba(0, 0, 0, 0);*/
+  opacity: 0;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
+  top: 50vh;
+  left: 50vw;
   transform: translate(-50%, -50%);
-  top: 0;
-  left: 0;
+  animation-name: expand1;
+  /*will-change: width, height, opacity;*/
+  /*transform: translateZ(0);*/
 }
 #c1 {
-  animation-duration: 4s;
-  animation-name: expand1;
+  animation-duration: 8s;
+  /*transform: rotate(-45deg);*/
+  /*width: 1700px;
+  height: 1700px;*/
 }
 #c2 {
-  animation-duration: 2.5s;
-  animation-name: expand2;
+  animation-duration: 9s;
+  /*display: none;*/
 }
 #c3 {
-  animation-duration: 5s;
-  animation-name: expand3;
+  animation-duration: 7s;
+  /*display: none;*/
+}
+#c4 {
+  animation-duration: 10s;
+}
+#c5 {
+  animation-duration: 11s;
+}
+#c6 {
+  animation-duration: 6s
 }
 
 @keyframes expand1 {
-  0% {
-    width: 100px;
-    height: 100px;
-    border-color: rgba(0, 0, 0, 0);
-  }
+  /*0% {*/
+    /*transform: translate(-50%, -50%);*/
+    /*opacity: 0;*/
+    /*border-right: #09F;*/
+  /*}*/
   50% {
-    border-color: rgba(238, 28, 36, 0.3)
+    opacity: 0.3;
   }
   100% {
-    width: 1700px;
-    height: 1700px;
-    border-color: rgba(0, 0, 0, 0);
+    width: 200vh;
+    height: 200vh;
+    /*opacity: 0;*/
   }
 }
 @keyframes expand2 {

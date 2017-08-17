@@ -1,20 +1,20 @@
 $(document).ready(function() {
 
     var newsAPIKey = "919866e8cdde468e954a8230d4c63ece",
-        sources = [
-            "bbc-news",
-            "sky-news",
-            "associated-press",
-            "the-verge",
-            "reuters",
-            "national-geographic",
-            "new-scientist",
-            "bloomberg",
-            "cnbc",
-            "cnn",
-            "engadget",
-            "financial-times"
-        ],
+        sources = {
+            "bbc-news": "top stories",
+            // "sky-news": "top stories",
+            "associated-press": "top stories",
+            "the-verge": "tech news",
+            "reuters": "top stories",
+            "national-geographic": "science news",
+            "new-scientist": "science news",
+            "bloomberg": "business news",
+            "cnbc": "business news",
+            "cnn": "top stories",
+            "engadget": "tech news",
+            // "financial-times": "finance news"
+        },
         sort = "top",
         weatherAPIKey = "30fe2db74a3ccfa7d32842547855dc2f",
         weatherCities = [
@@ -34,7 +34,7 @@ $(document).ready(function() {
             3117735 //Madrid
         ],
 
-        // newsTemplate = "news-template.html",
+        // newsTemplate = "news-template.html", cannot load (cross origin request)
         newsTemplate = "https://binaryfunt.github.io/breakfiller/news-template.html",
 
         mainDiv = $("#main > .wrapper")[0],
@@ -45,17 +45,14 @@ $(document).ready(function() {
 
 
     function newsAPIurl() {
-        rand = randInt(sources);
+        var sourceIDs = getObjKeys(sources),
+            rand = randInt(sourceIDs);
         console.log(rand);
-        return "https://newsapi.org/v1/articles?source="+sources[rand]+"&sortBy="+sort+"&apiKey="+newsAPIKey;
+        return "https://newsapi.org/v1/articles?source="+sourceIDs[rand]+"&sortBy="+sort+"&apiKey="+newsAPIKey;
     }
     function weatherAPIurl() {
         rand = randInt(weatherCities);
         return "http://api.openweathermap.org/data/2.5/forecast?id="+weatherCities[rand]+"&APPID="+weatherAPIKey;
-    }
-
-    function randInt(array) {
-        return Math.floor(Math.random()*array.length);
     }
 
     function getParameterByName(name, url) {
@@ -70,19 +67,33 @@ $(document).ready(function() {
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
 
+    function randInt(array) {
+        return Math.floor(Math.random()*array.length);
+    }
+    function getObjKeys(obj) {
+        return Object.keys(obj);
+    }
+    function getObjKeysAsInts(obj) {
+        return Object.keys(obj).map(Number);
+    }
+    function getObjValues(obj) {
+        return Object.keys(obj).map(function(key) {
+            return obj[key];
+        });
+    }
+
 
     $.fn.slideshow = function(duration, textElements) {
         var self = this;
             deferred = new $.Deferred();
 
-
         function progress() {
             // var textContainer = self.find(".text-container");
             var textContainer = self.find(".text");
-            // console.log(textContainer);
-            // self.show();
+            self.show();
             // textContainer.height(textChildren.getMaxHeight());
             textContainer.height(textContainer.height());
+            // console.log(textContainer.height());
             // self.height(textChildren.getMaxHeight());
             self.fadeTo(duration, 1)
                 .promise().done(doTextType);
@@ -194,16 +205,21 @@ $(document).ready(function() {
 
 
     function handleNewsAPIReq(data, deferred) {
+        // console.log(data);
         var articles =  data.articles,
+            source = data.source
             promises = [];
-        console.log(articles[0]);
+        // console.log(articles[0]);
         for (var i = 0; i < articles.length; i++) {
+            articles[i].source = source;
             createArticle(articles[i], i == articles.length - 1);
         }
     }
 
     function createArticle(article, isLast) {
         var content = {
+            category: sources[article.source],
+            logoSrc: "img/"+article.source+".png",
             title: article.title,
             description: article.description,
             imgLink: article.urlToImage
@@ -248,6 +264,8 @@ $(document).ready(function() {
     function refresh() {
         $(mainDiv).empty();
         getNews(newsAPIurl());
+        // TODO catch failure to load
+        // TODO preload images
     }
 
 
