@@ -106,7 +106,7 @@ body {
 .article .text, .article .top-bar {
   padding: 12px;
   padding: 12px;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.6);
 }
 .article h2 {
   font-size: 22px;
@@ -133,24 +133,22 @@ body {
 /* ---- Background/animation styles ---- */
 
 body {
-  background: -webkit-linear-gradient(45deg, #f7b4b7 0%, #FFF 100%);
-  background: linear-gradient(45deg, #f7b4b7 0%, #FFF 100%);
+  background: -webkit-linear-gradient(45deg, #f19393 0%, #FFF 100%);
+  background: linear-gradient(45deg, #f19393 0%, #FFF 100%);
   background-size: 200% 200%;
   height: 100%;
   width: 100%;
-  -webkit-animation: background 6s ease infinite;
-  animation: background 6s ease infinite;
+  -webkit-animation: background 3s ease infinite;
+  animation: background 3s ease infinite;
+  animation-direction: alternate;
 }
 
 @-webkit-keyframes background {
   0% {
     background-position: 0% 50%;
   }
-  50% {
-    background-position: 100% 50%;
-  }
   100% {
-    background-position: 0% 50%;
+    background-position: 100% 50%;
   }
 }
 
@@ -158,22 +156,19 @@ body {
   0% {
     background-position: 0% 50%;
   }
-  50% {
-    background-position: 100% 50%;
-  }
   100% {
-    background-position: 0% 50%;
+    background-position: 100% 50%;
   }
 }
 
 
 .bg-circle {
   position: fixed;
-  width: 200vw;
+  width: 4000px;
   height: 60px;
   z-index: -1;
   /*border-radius: 50%;*/
-  background: #09F;
+  background: #FFF;
   /*border: 60px solid #09F;/*rgba(0, 0, 0, 0);*/
   /*border-top-color: transparent;*/
   opacity: 0;
@@ -181,7 +176,7 @@ body {
   animation-iteration-count: infinite;
   animation-direction: alternate;
   top: 0;
-  left: -80vw;
+  left: calc(50vw - 2000px);
   transform: rotate(-45deg);
   animation-name: expand1;
   /*will-change: width, height, opacity;*/
@@ -223,10 +218,10 @@ body {
     /*border-right: #09F;*/
   /*}*/
   50% {
-    opacity: 0.3;
+    opacity: 0.5;
   }
   100% {
-    transform: translateX(80vw) rotate(-45deg);
+    transform: translateX(900px) rotate(-45deg);
     /*opacity: 0;*/
   }
 }
