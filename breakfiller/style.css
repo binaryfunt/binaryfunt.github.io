@@ -169,18 +169,19 @@ body {
 
 .bg-circle {
   position: fixed;
-  width: 100px;
-  height: 100px;
+  width: 200vh;
+  height: 200vh;
   z-index: -1;
   border-radius: 50%;
   background: transparent;
   border: 60px solid #09F;/*rgba(0, 0, 0, 0);*/
+  border-top-color: transparent;
   opacity: 0;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
-  top: 50vh;
-  left: 50vw;
-  transform: translate(-50%, -50%);
+  top: -200vh;
+  left: 0;
+  /*transform: translateX(-50%);*/
   animation-name: expand1;
   /*will-change: width, height, opacity;*/
   /*transform: translateZ(0);*/
@@ -219,8 +220,7 @@ body {
     opacity: 0.3;
   }
   100% {
-    width: 200vh;
-    height: 200vh;
+    transform: translateY(100vh);
     /*opacity: 0;*/
   }
 }
