@@ -179,6 +179,7 @@ body {
   opacity: 0;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
+  animation-direction: alternate;
   top: -200vh;
   left: 0;
   /*transform: translateX(-50%);*/
@@ -193,21 +194,25 @@ body {
   height: 1700px;*/
 }
 #c2 {
-  animation-duration: 9s;
+  animation-duration: 8s;
+  animation-delay: 4s;
   /*display: none;*/
 }
 #c3 {
-  animation-duration: 7s;
+  animation-duration: 8s;
+  animation-delay: 2s;
   /*display: none;*/
 }
 #c4 {
   animation-duration: 10s;
 }
 #c5 {
-  animation-duration: 11s;
+  animation-duration: 10s;
+  animation-delay: 5s;
 }
 #c6 {
-  animation-duration: 6s
+  animation-duration: 10s;
+  animation-delay: 3s;
 }
 
 @keyframes expand1 {
