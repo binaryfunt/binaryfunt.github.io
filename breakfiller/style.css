@@ -168,10 +168,9 @@ body {
   height: 60px;
   z-index: -1;
   /*border-radius: 50%;*/
-  background: #FFF;
+  background: rgba(255, 255, 255, 0);
   /*border: 60px solid #09F;/*rgba(0, 0, 0, 0);*/
   /*border-top-color: transparent;*/
-  opacity: 0;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   animation-direction: alternate;
@@ -218,7 +217,7 @@ body {
     /*border-right: #09F;*/
   /*}*/
   50% {
-    opacity: 0.5;
+    background: rgba(255, 255, 255, 0.6);
   }
   100% {
     transform: translateX(900px) rotate(-45deg);
