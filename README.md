@@ -4,7 +4,7 @@
 
 Public preview of dielectric boundary visualisation.
 
-The Jupyter iPython Notebook can be downloaded [here](https://binaryfunt.github.io/imperial-visualisations/notebook/boundaries.ipynb)
+A static version of the Jupyter iPython Notebook is viewable [here](https://nbviewer.jupyter.org/urls/binaryfunt.github.io/imperial-visualisations/notebook/boundaries.ipynb?flush_cache=true). The Notebook can be downloaded [here](https://binaryfunt.github.io/imperial-visualisations/notebook/boundaries.ipynb).
 
 ## [Breakfiller](https://binaryfunt.github.io/breakfiller/index.html)
 
