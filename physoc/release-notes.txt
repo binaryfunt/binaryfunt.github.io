@@ -1,0 +1,30 @@
+v1.5
+    # Implemented PHP/XML service for showing news banners on index.php and news.php
+
+v1.4
+    # Added "news" and "careers info" pages
+    # Visual improvements and extra functionality for event pages
+    # Made display more compact on smaller screens
+
+    # Improved PHP
+    # Further reduced download sizes using gzip and replacing some svgs with pngs
+    # Refactored JS to be more object-oriented
+    # Added OpenGraph meta tags for better sharing
+
+v1.3 Under-the-hood changes
+    # Increased event maintainability & automation using PHP
+    # Added useful redirects to .htaccess such as physoc.co.uk/email -> IC email login page
+    # Updated out of date useful links
+    # Replaced social link <img> tags with <svg>
+
+v1.2 Under-the-hood changes
+    # Switched to PHP
+
+v1.1: Bug fixes
+    # Links on dougal.union.ic.ac.uk/rcsu/physoc treat dougal.union.ic.ac.uk/ as the root directory
+    # 500 error not working
+    # 404 error page for sub directories lose CSS due to using ../ not /
+    # Fixed layout issue in IE10
+    # Fixed wiki login error - redirect physoc.co.uk/login.php to the dougal version
+
+    # Improved appearance of wiki login page

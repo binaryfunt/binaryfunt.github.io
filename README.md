@@ -9,3 +9,7 @@ A static version of the Jupyter iPython Notebook is viewable [here](https://nbvi
 ## [Breakfiller](https://binaryfunt.github.io/breakfiller/index.html)
 
 News "breakfiller" screen created for ICHACK17.
+
+## [Physoc](https://binaryfunt.github.io/physoc/index.html)
+
+Archived version of the [Imperial College Physics Society website](https://physoc.co.uk) that I created when I was webmaster. Incomplete; for demo purposes only.
