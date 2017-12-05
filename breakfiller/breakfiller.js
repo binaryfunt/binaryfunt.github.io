@@ -115,18 +115,18 @@ $(document).ready(function() {
         }
 
         function clearCurrent() {
-            if ($.fn.typeText.queue.length == 0) {
-                // console.log("clearing current", self);
-                $.fn.slideshow.queue.shift();
-                self.fadeOut(fadeTime)
-                    .promise().done(function() {
-                        if ($.fn.slideshow.queue.length > 0) {
-                            $.fn.slideshow.queue[0]();
-                        } else {
-                            refresh();
-                        }
-                    });
-            }
+            // console.log("clearing current", self);
+            console.log(self);
+            $.fn.slideshow.queue.shift();
+
+            self.fadeOut(fadeTime)
+                .promise().done(function() {
+                    if ($.fn.slideshow.queue.length > 0) {
+                        $.fn.slideshow.queue[0]();
+                    } else {
+                        refresh();
+                    }
+                });
         }
 
         // Make a shared variable between the elements that call this function:
@@ -149,20 +149,6 @@ $(document).ready(function() {
             isTag,
             text;
 
-        function clearCurrent() {
-            // Remove element that just ended from queue:
-            $.fn.typeText.queue.shift();
-            // Remove element from DOM:
-            self.fadeOut(fadeTime);
-
-            if ($.fn.typeText.queue.length > 0) {
-                // Call type() for next element in queue:
-                $.fn.typeText.queue[0]();
-                // console.log(queue[0], "called");
-            }
-            deferred.resolve();
-        }
-
         function type() {
             var text = str.slice(0, ++i);
 
@@ -171,8 +157,9 @@ $(document).ready(function() {
             }
 
             if (isDone()) {
-                // Wait before moving on to next element:
-                setTimeout(clearCurrent, advanceDelay);
+                setTimeout(function() {
+                    deferred.resolve();
+                }, advanceDelay);
                 return;
             }
             self.html(text);
@@ -194,16 +181,7 @@ $(document).ready(function() {
         self.html("");
         self.addClass("visible");
 
-        // Make a shared variable between the elements that call this function:
-        // This will call them in the order that were added
-        $.fn.typeText.queue = $.fn.typeText.queue || [];
-
-        $.fn.typeText.queue.push(type);
-        // If it's the 1st element added or no elements are in the queue, call type()
-        if ($.fn.typeText.queue.length == 1) {
-            $.fn.typeText.queue[0]();
-            // console.log(queue[0], "called");
-        }
+        type();
         return deferred.promise();
     };
 
