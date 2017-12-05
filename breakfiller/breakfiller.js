@@ -41,17 +41,18 @@ $(document).ready(function() {
 
         fadeTime = 500,
         keystrokeDelay = 15,
-        advanceDelay = (getParameterByName("dur") * 1000 || 10000);
+        advanceDelay = (getParameterByName("dur") * 1000 || 10000),
+        descriptionTruncLen = 300;
 
 
-    function newsAPIurl() {
+    function randNewsAPIurl() {
         var sourceIDs = getObjKeys(sources),
             rand = randInt(sourceIDs);
         console.log(rand);
         return "https://newsapi.org/v1/articles?source="+sourceIDs[rand]+"&sortBy="+sort+"&apiKey="+newsAPIKey;
     }
-    function weatherAPIurl() {
-        rand = randInt(weatherCities);
+    function randWeatherAPIurl() {
+        var rand = randInt(weatherCities);
         return "http://api.openweathermap.org/data/2.5/forecast?id="+weatherCities[rand]+"&APPID="+weatherAPIKey;
     }
 
@@ -82,8 +83,13 @@ $(document).ready(function() {
         });
     }
 
+    function truncate(text) {
+        var truncRegex = new RegExp("^(.{" + descriptionTruncLen + "}[\\w']*).*");
+        return text.replace(truncRegex, "$1").concat("\u2026");
+    }
 
-    $.fn.slideshow = function(duration, textElements) {
+
+    $.fn.slideshow = function(fadeTime, textElements) {
         var self = this;
             deferred = new $.Deferred();
 
@@ -95,7 +101,7 @@ $(document).ready(function() {
             textContainer.height(textContainer.height());
             // console.log(textContainer.height());
             // self.height(textChildren.getMaxHeight());
-            self.fadeTo(duration, 1)
+            self.fadeTo(fadeTime, 1)
                 .promise().done(doTextType);
         }
 
@@ -158,9 +164,13 @@ $(document).ready(function() {
         }
 
         function type() {
-            text = str.slice(0, ++i);
-            if (text == str) {
-                // console.log("completed typing");
+            var text = str.slice(0, ++i);
+
+            function isDone() {
+                return text == str;
+            }
+
+            if (isDone()) {
                 // Wait before moving on to next element:
                 setTimeout(clearCurrent, advanceDelay);
                 return;
@@ -207,7 +217,7 @@ $(document).ready(function() {
     function handleNewsAPIReq(data, deferred) {
         // console.log(data);
         var articles =  data.articles,
-            source = data.source
+            source = data.source,
             promises = [];
         // console.log(articles[0]);
         for (var i = 0; i < articles.length; i++) {
@@ -224,6 +234,9 @@ $(document).ready(function() {
             description: article.description,
             imgLink: article.urlToImage
         };
+        if (content.description.length > descriptionTruncLen) {
+            content.description = truncate(content.description);
+        }
         $.get(newsTemplate, function(data) {
             articleHtml = Mustache.render(data, content);
             $(mainDiv).append(articleHtml);
@@ -263,13 +276,13 @@ $(document).ready(function() {
 
     function refresh() {
         $(mainDiv).empty();
-        getNews(newsAPIurl());
+        getNews(randNewsAPIurl());
         // TODO catch failure to load
         // TODO preload images
     }
 
 
-    getNews(newsAPIurl());
+    getNews(randNewsAPIurl());
 
 
 });
