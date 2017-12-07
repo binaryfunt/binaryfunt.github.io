@@ -18,7 +18,7 @@ $(document).ready(function() {
             },
             sort: "top",
             // templateURL: "news-template.html", cannot load (cross origin request)
-            templateURL: "https://binaryfunt.github.io/breakfiller/news-template.html"
+            templateURL: "https://binaryfunt.github.io/breakfiller/templates/news.html"
         },
 
         weather = {
@@ -38,8 +38,11 @@ $(document).ready(function() {
                 "Moscow": 524901,
                 "Kolkata": 1275004,
                 "Madrid": 3117735
-            }
+            },
+            templateURL: "https://binaryfunt.github.io/breakfiller/templates/weather.html"
         },
+
+        titleTemplateURL = "https://binaryfunt.github.io/breakfiller/templates/title.html"
 
 
         mainDiv = $("#main > .wrapper")[0],
@@ -97,6 +100,10 @@ $(document).ready(function() {
     $.fn.slideshow = function(fadeTime, textElements) {
         var self = this;
             deferred = new $.Deferred();
+
+        function start() {
+
+        }
 
         function progress() {
             // var textContainer = self.find(".text-container");
