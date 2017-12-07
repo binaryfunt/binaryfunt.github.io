@@ -42,7 +42,7 @@ $(document).ready(function() {
             templateURL: "https://binaryfunt.github.io/breakfiller/templates/weather.html"
         },
 
-        titleTemplateURL = "https://binaryfunt.github.io/breakfiller/templates/title.html"
+        titleTemplateURL = "https://binaryfunt.github.io/breakfiller/templates/title.html",
 
 
         mainDiv = $("#main > .wrapper")[0],
@@ -128,7 +128,7 @@ $(document).ready(function() {
 
         function clearCurrent() {
             // console.log("clearing current", self);
-            console.log(self);
+            // console.log(self);
             $.fn.slideshow.queue.shift();
 
             self.fadeOut(fadeTime)
@@ -204,38 +204,33 @@ $(document).ready(function() {
     };
 
 
-    function handleNewsAPIReq(data, deferred) {
-        // console.log(data);
-        var articles =  data.articles,
-            source = data.source,
-            promises = [];
-        // console.log(articles[0]);
-        for (var i = 0; i < articles.length; i++) {
-            articles[i].source = source;
-            createArticle(articles[i], i == articles.length - 1);
-        }
+    function createTitle(titleText) {
+        var content = {
+            title: titleText
+        },
+            promise = Promise.resolve($.get(titleTemplateURL));
+
+        promise.then(function(response) {
+            titleHtml = Mustache.render(response, content);
+            $(mainDiv).append(titleHtml);
+            console.log($(mainDiv).html);
+        });
     }
 
-    function createArticle(article, isLast) {
+
+    function createArticle(articleData, source) {
         var content = {
-            category: news.sources[article.source],
-            logoSrc: "img/"+article.source+".png",
-            title: article.title,
-            description: article.description,
-            imgLink: article.urlToImage
+            category: news.sources[source],
+            logoSrc: "img/"+source+".png",
+            title: articleData.title,
+            description: articleData.description,
+            imgLink: articleData.urlToImage
         };
         if (content.description.length > descriptionTruncLen) {
             content.description = truncate(content.description);
         }
-        $.get(news.templateURL, function(data) {
-            articleHtml = Mustache.render(data, content);
-            $(mainDiv).append(articleHtml);
-            // return deferred.promise();
-            // console.log("Added article", isLast);
-            if (isLast) {
-                runSlideshow();
-            }
-        });
+        var articleHtml = Mustache.render(news.template, content);
+        $(mainDiv).append(articleHtml);
     }
 
     // function populateArticleTemplate(template, article) {
@@ -246,7 +241,25 @@ $(document).ready(function() {
 
 
     function getNews(APIurl) {
-        $.get(APIurl, handleNewsAPIReq, "json");
+        if (!news.template) {
+            $.get(news.templateURL, function(response) {
+                news.template = response;
+            });
+        }
+
+        $.get(APIurl, function(data) {
+            var articles =  data.articles,
+                source = data.source;
+                // articlePromises = [];
+            // console.log(articles[0]);
+            for (var i = 0; i < articles.length; i++) {
+                // articlePromises.push(
+                createArticle(articles[i], source);
+                // );
+            }
+            // Promise.all(articlePromises).then(runSlideshow);
+            runSlideshow();
+        });
     }
 
 
