@@ -1,41 +1,46 @@
 $(document).ready(function() {
 
-    var newsAPIKey = "919866e8cdde468e954a8230d4c63ece",
-        sources = {
-            "bbc-news": "top stories",
-            // "sky-news": "top stories",
-            "associated-press": "top stories",
-            "the-verge": "tech news",
-            "reuters": "top stories",
-            "national-geographic": "science news",
-            "new-scientist": "science news",
-            "bloomberg": "business news",
-            "cnbc": "business news",
-            "cnn": "top stories",
-            "engadget": "tech news",
-            // "financial-times": "finance news"
+    var news = {
+            APIKey: "919866e8cdde468e954a8230d4c63ece",
+            sources: {
+                "bbc-news": "top stories",
+                // "sky-news": "top stories",
+                "associated-press": "top stories",
+                "the-verge": "tech news",
+                "reuters": "top stories",
+                "national-geographic": "science news",
+                "new-scientist": "science news",
+                "bloomberg": "business news",
+                "cnbc": "business news",
+                "cnn": "top stories",
+                "engadget": "tech news",
+                // "financial-times": "finance news"
+            },
+            sort: "top",
+            // templateURL: "news-template.html", cannot load (cross origin request)
+            templateURL: "https://binaryfunt.github.io/breakfiller/news-template.html"
         },
-        sort = "top",
-        weatherAPIKey = "30fe2db74a3ccfa7d32842547855dc2f",
-        weatherCities = [
-            2643743, //London
-            2950159, //Berlin
-            5128581, //NY
-            5368361, //LA
-            292223, //Dubai
-            1273840, //New Delhi
-            1880252, //Signapore
-            5308655, //Pheonix
-            3451190, //Rio
-            3416900, //Reykjavic
-            1816670, //Beijing
-            524901, //Moscow
-            1275004, //Kolkata
-            3117735 //Madrid
-        ],
 
-        // newsTemplate = "news-template.html", cannot load (cross origin request)
-        newsTemplate = "https://binaryfunt.github.io/breakfiller/news-template.html",
+        weather = {
+            APIKey: "30fe2db74a3ccfa7d32842547855dc2f",
+            cities: {
+                "London": 2643743,
+                "Berlin": 2950159,
+                "New York City": 5128581,
+                "Los Angeles": 5368361,
+                "Dubai": 292223,
+                "New Dehli": 1273840,
+                "Singapore": 1880252,
+                "Phoenix": 5308655,
+                "Rio de Janeiro": 3451190,
+                "Reykjavik": 3416900,
+                "Beijing": 1816670,
+                "Moscow": 524901,
+                "Kolkata": 1275004,
+                "Madrid": 3117735
+            }
+        },
+
 
         mainDiv = $("#main > .wrapper")[0],
 
@@ -46,10 +51,10 @@ $(document).ready(function() {
 
 
     function randNewsAPIurl() {
-        var sourceIDs = getObjKeys(sources),
+        var sourceIDs = getObjKeys(news.sources),
             rand = randInt(sourceIDs);
         console.log(rand);
-        return "https://newsapi.org/v1/articles?source="+sourceIDs[rand]+"&sortBy="+sort+"&apiKey="+newsAPIKey;
+        return "https://newsapi.org/v1/articles?source="+sourceIDs[rand]+"&sortBy="+news.sort+"&apiKey="+news.APIKey;
     }
     function randWeatherAPIurl() {
         var rand = randInt(weatherCities);
@@ -206,7 +211,7 @@ $(document).ready(function() {
 
     function createArticle(article, isLast) {
         var content = {
-            category: sources[article.source],
+            category: news.sources[article.source],
             logoSrc: "img/"+article.source+".png",
             title: article.title,
             description: article.description,
@@ -215,7 +220,7 @@ $(document).ready(function() {
         if (content.description.length > descriptionTruncLen) {
             content.description = truncate(content.description);
         }
-        $.get(newsTemplate, function(data) {
+        $.get(news.templateURL, function(data) {
             articleHtml = Mustache.render(data, content);
             $(mainDiv).append(articleHtml);
             // return deferred.promise();
