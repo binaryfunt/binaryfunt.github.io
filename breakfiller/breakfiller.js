@@ -306,8 +306,8 @@ $(document).ready(function() {
 
     function runSlideshow() {
         var title = $(".title");
-        title.on('animationend webkitAnimationEnd oAnimationEnd oanimationend MSAnimationEnd', function(event) {
-            if (event.originalEvent.animationName == "wipe") {
+        title.on("animationend webkitAnimationEnd oAnimationEnd oanimationend MSAnimationEnd", function(event) {
+            if (event.originalEvent.animationName == "wipe-text") {
                 title.fadeOut(0)
                     .promise().done(function() {
                         var articles = $(".article");
