@@ -18,7 +18,6 @@ $(document).ready(function() {
             },
             sort: "top",
             // templateURL: "news-template.html", cannot load (cross origin request)
-            templateURL: "https://binaryfunt.github.io/breakfiller/templates/news.html"
         },
 
         weather = {
@@ -38,11 +37,15 @@ $(document).ready(function() {
                 "Moscow": 524901,
                 "Kolkata": 1275004,
                 "Madrid": 3117735
-            },
-            templateURL: "https://binaryfunt.github.io/breakfiller/templates/weather.html"
+            }
         },
 
-        titleTemplateURL = "https://binaryfunt.github.io/breakfiller/templates/title.html",
+        templates = {},
+        templateURLs = {
+            news: "https://binaryfunt.github.io/breakfiller/templates/news.html",
+            // weather: "https://binaryfunt.github.io/breakfiller/templates/weather.html",
+            title: "https://binaryfunt.github.io/breakfiller/templates/title.html"
+        },
 
 
         mainDiv = $("#main > .wrapper")[0],
@@ -51,6 +54,12 @@ $(document).ready(function() {
         keystrokeDelay = 15,
         advanceDelay = (getParameterByName("dur") * 1000 || 10000),
         descriptionTruncLen = 300;
+
+
+
+    getTemplates()
+        .then(getNews);
+
 
 
     function randNewsAPIurl() {
@@ -99,7 +108,18 @@ $(document).ready(function() {
 
     $.fn.slideshow = function(fadeTime, textElements) {
         var self = this;
-            deferred = new $.Deferred();
+            // deferred = new $.Deferred();
+
+        // Make a shared variable between the elements that call this function:
+        // This will call them in the order that were added
+        $.fn.slideshow.queue = $.fn.slideshow.queue || [];
+
+        $.fn.slideshow.queue.push(progress);
+
+        // If it's the 1st element added or no elements are in the queue, call progress()
+        if ($.fn.slideshow.queue.length == 1) {
+            $.fn.slideshow.queue[0]();
+        }
 
         function start() {
 
@@ -140,61 +160,51 @@ $(document).ready(function() {
                     }
                 });
         }
-
-        // Make a shared variable between the elements that call this function:
-        // This will call them in the order that were added
-        $.fn.slideshow.queue = $.fn.slideshow.queue || [];
-
-        $.fn.slideshow.queue.push(progress);
-
-        // If it's the 1st element added or no elements are in the queue, call progress()
-        if ($.fn.slideshow.queue.length == 1) {
-            $.fn.slideshow.queue[0]();
-        }
     };
 
     $.fn.typeText = function() {
-        var self = this,
-            deferred = new $.Deferred(),
-            str = self.html(),
-            i = 0,
-            isTag,
-            text;
+        var self = this;
+        return new Promise(function(resolve, reject) {
+                // deferred = new $.Deferred(),
+            var str = self.html(),
+                i = 0,
+                isTag,
+                text;
 
-        function type() {
-            var text = str.slice(0, ++i);
+            self.html("");
+            self.addClass("visible");
 
-            function isDone() {
-                return text == str;
+            type();
+
+            function type() {
+                text = str.slice(0, ++i);
+
+                function isDone() {
+                    return text == str;
+                }
+
+                if (isDone()) {
+                    setTimeout(resolve, advanceDelay);
+                    return;
+                }
+                self.html(text);
+
+                var char = text.slice(-1);
+                if (char == "<") {
+                    isTag = true;
+                }
+                if (char == ">") {
+                    isTag = false;
+                }
+
+                if (isTag) {
+                    return type();
+                }
+                setTimeout(type, keystrokeDelay);
             }
 
-            if (isDone()) {
-                setTimeout(function() {
-                    deferred.resolve();
-                }, advanceDelay);
-                return;
-            }
-            self.html(text);
 
-            var char = text.slice(-1);
-            if (char == "<") {
-                isTag = true;
-            }
-            if (char == ">") {
-                isTag = false;
-            }
-
-            if (isTag) {
-                return type();
-            }
-            setTimeout(type, keystrokeDelay);
-        }
-
-        self.html("");
-        self.addClass("visible");
-
-        type();
-        return deferred.promise();
+        });
     };
 
     $.fn.getMaxHeight = function() {
@@ -226,10 +236,10 @@ $(document).ready(function() {
             description: articleData.description,
             imgLink: articleData.urlToImage
         };
-        if (content.description.length > descriptionTruncLen) {
+        if (content.description && content.description.length > descriptionTruncLen) {
             content.description = truncate(content.description);
         }
-        var articleHtml = Mustache.render(news.template, content);
+        var articleHtml = Mustache.render(templates.news, content);
         $(mainDiv).append(articleHtml);
     }
 
@@ -240,26 +250,58 @@ $(document).ready(function() {
     // }
 
 
-    function getNews(APIurl) {
-        if (!news.template) {
-            $.get(news.templateURL, function(response) {
-                news.template = response;
+    function getTemplates() {
+        return new Promise(function(resolve, reject) {
+        //     $.when.apply(
+        //         $,
+        //         getObjValues(templateURLs).map(url => $.get(url))
+        //     ).then(resolve);
+            var URLs = getObjValues(templateURLs),
+                templateNames = getObjKeys(templateURLs);
+            var promises = [];
+            // for (var i = 0; i < URLsArray.length; i++) {
+            //     promises.push($.get(URLsArray[i]));
+            // }
+            URLs.forEach(url => promises.push($.get(url)));
+            Promise.all(promises).then(function(responses) {
+                for (var i = 0; i < responses.length; i++) {
+                    templates[templateNames[i]] = responses[i];
+                }
+                resolve();
             });
-        }
-
-        $.get(APIurl, function(data) {
-            var articles =  data.articles,
-                source = data.source;
-                // articlePromises = [];
-            // console.log(articles[0]);
-            for (var i = 0; i < articles.length; i++) {
-                // articlePromises.push(
-                createArticle(articles[i], source);
-                // );
-            }
-            // Promise.all(articlePromises).then(runSlideshow);
-            runSlideshow();
         });
+    }
+
+
+    function getNews() {
+        // if (!news.template) {
+        //     $.get(news.templateURL)
+        //         .done(function(response) {
+        //             news.template = response;
+        //         }).fail(function() {
+        //             console.error("Failed to fetch template");
+        //         });
+        // }
+
+        $.get(randNewsAPIurl())
+            .done(function(response) {
+                var articles =  response.articles,
+                    source = response.source;
+                    // articlePromises = [];
+                // console.log(articles[0]);
+                createTitle(news.sources[source]);
+
+                for (var i = 0; i < articles.length; i++) {
+                    // articlePromises.push(
+                    createArticle(articles[i], source);
+                    // );
+                }
+                // Promise.all(articlePromises).then(runSlideshow);
+                runSlideshow();
+            }).fail(function() {
+                console.error("Failed to fetch news");
+                // TODO: retry request with new URL
+            });
     }
 
 
@@ -279,13 +321,8 @@ $(document).ready(function() {
 
     function refresh() {
         $(mainDiv).empty();
-        getNews(randNewsAPIurl());
-        // TODO catch failure to load
+        getNews();
         // TODO preload images
     }
-
-
-    getNews(randNewsAPIurl());
-
 
 });
