@@ -140,7 +140,7 @@ $(document).ready(function() {
         function doTextType() {
             // console.log(textChildren.getMaxHeight());
             textElements.each(function() {
-                // console.log("doing text type", self[0].innerHTML);
+                // console.log("doing text type", $(this).html());
                 $(this).typeText()
                     .then(clearCurrent);
             });
@@ -217,14 +217,9 @@ $(document).ready(function() {
     function createTitle(titleText) {
         var content = {
             title: titleText
-        },
-            promise = Promise.resolve($.get(titleTemplateURL));
-
-        promise.then(function(response) {
-            titleHtml = Mustache.render(response, content);
-            $(mainDiv).append(titleHtml);
-            console.log($(mainDiv).html);
-        });
+        };
+        var titleHtml = Mustache.render(templates.title, content);
+        $(mainDiv).append(titleHtml);
     }
 
 
@@ -310,16 +305,26 @@ $(document).ready(function() {
     }
 
     function runSlideshow() {
-        // console.log("running slide show");
-        var articles = $(".article");
-        articles.each(function() {
-            var textElements = $(this).find(".text");
-            // console.log(textElements[0].innerHTML);
-            $(this).slideshow(fadeTime, textElements);
+        var title = $(".title");
+        title.on('animationend webkitAnimationEnd oAnimationEnd oanimationend MSAnimationEnd', function(event) {
+            if (event.originalEvent.animationName == "wipe") {
+                title.fadeOut(0)
+                    .promise().done(function() {
+                        var articles = $(".article");
+                        articles.each(function() {
+                            var textElements = $(this).find(".text");
+                            // console.log(textElements[0].innerHTML);
+                            $(this).slideshow(fadeTime, textElements);
+                        });
+                    });
+            }
         });
+        // console.log("running slide show");
+
     }
 
     function refresh() {
+        console.log("Refreshing now");
         $(mainDiv).empty();
         getNews();
         // TODO preload images
