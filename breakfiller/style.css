@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css?family=Assistant:400,600');
+@import url('https://fonts.googleapis.com/css?family=Barlow:300,400,600,700');
 
 /* ------- Defaults ------- */
 
@@ -69,7 +69,7 @@ body {
   width: 100%;
   background: #FFF;
   color: #202020;
-  font-family: Assistant, "Helvetica Neue", "Arial Nova", "Segoe UI", Roboto, Helvetica, Arial, FreeSans, sans-serif;
+  font-family: Barlow, "Helvetica Neue", "Arial Nova", "Segoe UI", Roboto, Helvetica, Arial, FreeSans, sans-serif;
 }
 
 #main {
@@ -99,7 +99,7 @@ body {
   background-repeat: no-repeat;
   text-transform: uppercase;
   font-size: 50px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: normal;
   box-sizing: border-box;
   position: relative;
@@ -178,8 +178,9 @@ body {
 .article h2 {
   font-size: 22px;
   font-weight: 600;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   margin-bottom: 10px;
+  line-height: 1.2;
 }
 .article p {
   font-size: 18px;
