@@ -17,6 +17,7 @@ $(document).ready(function() {
                 // "financial-times": "finance news"
             },
             sort: "top",
+            lastRandInts: []
             // templateURL: "news-template.html", cannot load (cross origin request)
         },
 
@@ -159,6 +160,7 @@ $(document).ready(function() {
                 961: 10,
                 962: 10
             },
+            lastRandInts: []
         },
 
         templates = {},
@@ -174,7 +176,11 @@ $(document).ready(function() {
         fadeTime = 500,
         keystrokeDelay = 15,
         advanceDelay = (getParameterByName("dur") * 1000 || 10000),
-        descriptionTruncLen = 300;
+        descriptionTruncLen = 300,
+        weatherFormat = {
+            numRounds: 2,
+            numInEach: 4
+        };
 
 
 
@@ -185,13 +191,19 @@ $(document).ready(function() {
 
     function randNewsAPIurl() {
         var sourceIDs = getObjKeys(news.sources),
-            rand = randInt(sourceIDs);
+            rand = randInt(sourceIDs, news);
         console.log(rand);
         return "https://newsapi.org/v1/articles?source="+sourceIDs[rand]+"&sortBy="+news.sort+"&apiKey="+news.APIKey;
     }
     function randWeatherAPIurl() {
-        var rand = randInt(weatherCities);
-        return "http://api.openweathermap.org/data/2.5/forecast?id="+weatherCities[rand]+"&APPID="+weatherAPIKey;
+        var cityIDs = getObjValues(weather.cities),
+            idString = "";
+        for (var i = 0; i < weatherFormat.numRounds * weatherFormat.numInEach; i++) {
+            idString += cityIDs[randInt(cityIDs, weather)];
+            idString += ",";
+        }
+        idString = idString.slice(0, -1);
+        return "http://api.openweathermap.org/data/2.5/group?id="+idString+"&APPID="+weather.APIKey;
     }
 
     function getParameterByName(name, url) {
@@ -206,8 +218,16 @@ $(document).ready(function() {
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
 
-    function randInt(array) {
-        return Math.floor(Math.random()*array.length);
+    function randInt(array, category) {
+        // Returns rand int less than size of array, and not the same as stored last ints for the category
+        var rand = Math.floor(Math.random()*array.length);
+        if (category.lastRandInts.includes(rand)) {
+            return randInt(array, category);
+        } else {
+            category.lastRandInts.shift();
+            category.lastRandInts.push(rand);
+            return rand;
+        }
     }
     function getObjKeys(obj) {
         return Object.keys(obj);
