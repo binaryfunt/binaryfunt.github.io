@@ -1,0 +1,33 @@
+<div class="weather">
+  <div class="top-bar">
+    <span>{{category}}</span>
+    <img class="logo" src="{{logoSrc}}">
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>City</th>
+        <th>Conditions</th>
+        <th>Temperature</th>
+        <th>Wind</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#rows}}
+      <tr>
+        <td>{{city}}</td>
+        <td class="icon">
+          <img src="{{iconSrc}}" title="{{description}}">
+        </td>
+        <td class="temp" data-temperature="{{temp}}">
+          <div style="background: {{tempColor}}">{{temp}}&deg;</div>
+        </td>
+        <td class="wind" data-direction="{{wind.direction}}">
+          <div>{{wind.speed}}</div>
+          <img src="{{windVaneSrc}}" style="transform: rotate({{wind.direction}}deg)">
+        </td>
+      </tr>
+      {{/rows}}
+    </tbody>
+  </table>
+</div>

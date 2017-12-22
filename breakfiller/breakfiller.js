@@ -166,7 +166,7 @@ $(document).ready(function() {
         templates = {},
         templateURLs = {
             news: "https://binaryfunt.github.io/breakfiller/templates/news.html",
-            // weather: "https://binaryfunt.github.io/breakfiller/templates/weather.html",
+            weather: "https://binaryfunt.github.io/breakfiller/templates/weather.html",
             title: "https://binaryfunt.github.io/breakfiller/templates/title.html"
         },
 
@@ -185,7 +185,8 @@ $(document).ready(function() {
 
 
     getTemplates()
-        .then(getNews);
+        // .then(getNews);
+        .then(getWeather);
 
 
 
@@ -261,7 +262,7 @@ $(document).ready(function() {
     }
 
     function tempToHsl(temperature) {
-        var x = parseFloat(temp) + 100,
+        var x = parseFloat(temperature) + 100,
     	   hue = 125 - 125*erf((x - 110) / 20);
     	return "hsl("+hue+", 100%, 60%)";
     }
@@ -269,6 +270,20 @@ $(document).ready(function() {
     function truncate(text) {
         var truncRegex = new RegExp("^(.{" + descriptionTruncLen + "}[\\w']*).*");
         return text.replace(truncRegex, "$1").concat("\u2026");
+    }
+
+    function getWeatherIconURL(response) {
+        var iconID = weather.icons[response.weather[0].id],
+            fragURL = "img/if_weather_";
+        if (typeof iconID == 'number') {
+            return fragURL+iconID+".svg";
+        } else {
+            if (response.dt > response.sys.sunrise && response.dt < response.sys.sunset) {
+                return fragURL+iconID[0]+".svg";
+            } else {
+                return fragURL+iconID[1]+".svg";
+            }
+        }
     }
 
     function colorInTemperatures() {
@@ -401,7 +416,6 @@ $(document).ready(function() {
         $(mainDiv).append(titleHtml);
     }
 
-
     function createArticle(articleData, source) {
         var content = {
             category: news.sources[source],
@@ -417,6 +431,29 @@ $(document).ready(function() {
         $(mainDiv).append(articleHtml);
     }
 
+    function createWeatherView(weatherData, title) {
+        var content = {
+            category: title,
+            logoSrc: "img/openweathermap.svg",
+            windVaneSrc: "img/wind-vane.svg",
+            rows: []
+        };
+        weatherData.forEach(function(row) {
+            content.rows.push({
+                city: row.name,
+                iconSrc: getWeatherIconURL(row),
+                description: row.weather[0].description,
+                temp: kelToCel(row.main.temp),
+                tempColor: tempToHsl(kelToCel(row.main.temp)),
+                wind: {
+                    direction: row.wind.deg,
+                    speed: Math.round(row.wind.speed)
+                }
+            });
+        });
+        var weatherHtml = Mustache.render(templates.weather, content);
+        $(mainDiv).append(weatherHtml);
+    }
     // function populateArticleTemplate(template, article) {
     //
     //
@@ -479,8 +516,20 @@ $(document).ready(function() {
     }
 
 
-    function getWeather(APIurl) {
-        $.get(APIurl, handleWeatherAPIReq, "json");
+    function getWeather() {
+        var title = "World Weather";
+
+        weather.lastRandInts = new Array(weatherFormat.numRounds * weatherFormat.numInEach);
+        weather.lastRandInts.fill(-1);
+
+        $.get(randWeatherAPIurl())
+            .done(function(response) {
+                console.log(response.list);
+                createTitle(title);
+                createWeatherView(response.list, title);
+                // colorInTemperatures();
+                // rotateWeatherVanes();
+            });
     }
 
     function runSlideshow() {
