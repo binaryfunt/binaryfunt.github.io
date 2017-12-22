@@ -1,43 +1,119 @@
 <!doctype html>
-<html>
-<head>
-  <title>test</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <title>Breakfiller</title>
+    <meta name="description" content="A global news/weather/stock markets/timecheck breakfiller like in BBC World News of old">
 
-  <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js"></script>
+    <script src="mustache.min.js"></script>
 
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+  </head>
 
-</head>
-<body>
+  <body>
 
-  <div id="main">
-    <div class="wrapper">
+    <div id="main">
+      <div class="wrapper">
 
-      <div class="article" style="display: block; opacity: 1;">
-        <div class="top-bar">
-          <span>News</span>
-          <img class="logo" src="img/cnn.png">
+        <!-- <div class="article" style="display: block; opacity: 1;">
+          <div class="top-bar">
+            <span>top stories</span>
+            <img class="logo" src="img/cnn.png">
+          </div>
+          <div class="image" style="background-image: url(http://i2.cdn.turner.com/money/dam/assets/171215143727-gop-tax-bill-780x439.jpg);"></div>
+          <div class="text visible" style="height: 129px;">
+            <h2>GOP tax plan: Key details of the final bill, explained</h2>
+            <p>
+              The final bill still leans heavily toward tax cuts for corporations and business owners. But it also expands or restores some tax benefits for individuals relative to the earlier bills passed by the House and Senate.
+            </p>
+         </div>
+        </div> -->
+
+        <div class="weather">
+          <div class="top-bar">
+            <span>World weather</span>
+            <img class="logo" src="img/openweathermap.svg">
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>City</th>
+                <th>Conditions</th>
+                <th>Temperature</th>
+                <th>Wind</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>London</td>
+                <td class="icon">
+                  <img src="img/if_weather_7.svg">
+                </td>
+                <td class="temp" data-temperature="12">
+                  <div>12&deg;</div>
+                </td>
+                <td class="wind" data-direction="37">
+                  <div>9</div>
+                  <img src="img/wind-vane.svg">
+                </td>
+              </tr>
+              <tr>
+                <td>New York City</td>
+                <td class="icon">
+                  <img src="img/if_weather_4.svg">
+                </td>
+                <td class="temp" data-temperature="5">
+                  <div>5&deg;</div>
+                </td>
+                <td class="wind" data-direction="275">
+                  <div>10</div>
+                  <img src="img/wind-vane.svg">
+                </td>
+              </tr>
+              <tr>
+                <td>Berlin</td>
+                <td class="icon">
+                  <img src="img/if_weather_1.svg">
+                </td>
+                <td class="temp" data-temperature="14">
+                  <div>14&deg;</div>
+                </td>
+                <td class="wind" data-direction="100">
+                  <div>4</div>
+                  <img src="img/wind-vane.svg">
+                </td>
+              </tr>
+              <tr>
+                <td>Reykjavik</td>
+                <td class="icon">
+                  <img src="img/if_weather_36.svg">
+                </td>
+                <td class="temp" data-temperature="-12">
+                  <div>-12&deg;</div>
+                </td>
+                <td class="wind strong" data-direction="20">
+                  <div>42</div>
+                  <img src="img/wind-vane-dark.svg">
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="image" style="background-image: url(http://i2.cdn.cnn.com/cnnnext/dam/assets/170816153833-mike-pence-super-tease.jpg);"></div>
-        <div class="text visible">
-          <h2>PENCE WON'T SAY IF HE AGREES WITH TRUMP</h2>
-          <p>
-            Vice President Mike Pence avoided directly answering a reporter's question about whether he thought, like President Donald Trump, that there were "good people on both sides" who participated in the Charlottesville, Virginia, protests over the weekend that resulted in the death of one woman.
-          </p>
-        </div>
+
       </div>
-
     </div>
-  </div>
 
-  <div class="bg-circle" id="c1"></div>
-  <div class="bg-circle" id="c2"></div>
-  <div class="bg-circle" id="c3"></div>
 
-</body>
+    <div class="bg-circle" id="c1"></div>
+    <div class="bg-circle" id="c2"></div>
+    <div class="bg-circle" id="c3"></div>
+    <div class="bg-circle" id="c4"></div>
+    <div class="bg-circle" id="c5"></div>
+    <div class="bg-circle" id="c6"></div>
+
+
+  </body>
 </html>
