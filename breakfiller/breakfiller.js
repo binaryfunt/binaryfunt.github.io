@@ -204,7 +204,7 @@ $(document).ready(function() {
             idString += ",";
         }
         idString = idString.slice(0, -1);
-        return "http://api.openweathermap.org/data/2.5/group?id="+idString+"&APPID="+weather.APIKey;
+        return "https://api.openweathermap.org/data/2.5/group?id="+idString+"&APPID="+weather.APIKey;
     }
 
     function getParameterByName(name, url) {
@@ -257,6 +257,9 @@ $(document).ready(function() {
         return 2 * sum / Math.sqrt(3.14159265358979);
     }
 
+    function mpsToMph(speed) {
+        return Math.round(speed*3600 / 1609);
+    }
     function kelToCel(kelvin) {
         return Math.round(kelvin - 273.15);
     }
@@ -278,7 +281,7 @@ $(document).ready(function() {
         if (typeof iconID == 'number') {
             return fragURL+iconID+".svg";
         } else {
-            if (response.dt > response.sys.sunrise && response.dt < response.sys.sunset) {
+            if ((response.dt > response.sys.sunrise && response.dt < response.sys.sunset) || (response.dt < response.sys.sunrise && response.dt < response.sys.sunset - 86400)) {
                 return fragURL+iconID[0]+".svg";
             } else {
                 return fragURL+iconID[1]+".svg";
@@ -286,18 +289,18 @@ $(document).ready(function() {
         }
     }
 
-    function colorInTemperatures() {
-        $(".weather .temp").each(function() {
-            var temperature = this.dataset.temperature;
-            $(this).find("div").css("background", tempToHsl(temperature));
-        });
-    }
-    function rotateWeatherVanes() {
-        $(".weather .wind").each(function() {
-            var direction = this.dataset.direction;
-            $(this).find("img").css("transform", "rotate("+direction+"deg)");
-        });
-    }
+    // function colorInTemperatures() {
+    //     $(".weather .temp").each(function() {
+    //         var temperature = this.dataset.temperature;
+    //         $(this).find("div").css("background", tempToHsl(temperature));
+    //     });
+    // }
+    // function rotateWeatherVanes() {
+    //     $(".weather .wind").each(function() {
+    //         var direction = this.dataset.direction;
+    //         $(this).find("img").css("transform", "rotate("+direction+"deg)");
+    //     });
+    // }
 
 
     $.fn.slideshow = function(fadeTime, textElements) {
