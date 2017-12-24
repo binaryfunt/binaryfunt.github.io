@@ -278,10 +278,13 @@ $(document).ready(function() {
     function getWeatherIconURL(response) {
         var iconID = weather.icons[response.weather[0].id],
             fragURL = "img/if_weather_";
+            function isDaytime() {
+                return (response.dt > response.sys.sunrise && response.dt < response.sys.sunset) || (response.dt < response.sys.sunrise && response.dt < response.sys.sunset - 86400);
+            }
         if (typeof iconID == 'number') {
             return fragURL+iconID+".svg";
         } else {
-            if ((response.dt > response.sys.sunrise && response.dt < response.sys.sunset) || (response.dt < response.sys.sunrise && response.dt < response.sys.sunset - 86400)) {
+            if (isDaytime) {
                 return fragURL+iconID[0]+".svg";
             } else {
                 return fragURL+iconID[1]+".svg";
@@ -412,11 +415,21 @@ $(document).ready(function() {
 
 
     function createTitle(titleText) {
-        var content = {
-            title: titleText
-        };
-        var titleHtml = Mustache.render(templates.title, content);
-        $(mainDiv).append(titleHtml);
+        return new Promise(function(resolve, reject) {
+            var content = {
+                title: titleText
+            },
+                titleHtml = Mustache.render(templates.title, content);
+            $(mainDiv).append(titleHtml);
+
+            var title = $(".title");
+            title.on("animationend webkitAnimationEnd oAnimationEnd oanimationend MSAnimationEnd", function(event) {
+                if (event.originalEvent.animationName == "wipe-text") {
+                    title.fadeOut(0)
+                        .promise().done(resolve);
+                }
+            });
+        });
     }
 
     function createArticle(articleData, source) {
@@ -450,7 +463,7 @@ $(document).ready(function() {
                 tempColor: tempToHsl(kelToCel(row.main.temp)),
                 wind: {
                     direction: row.wind.deg,
-                    speed: Math.round(row.wind.speed)
+                    speed: mpsToMph(row.wind.speed)
                 }
             });
         });
@@ -460,7 +473,7 @@ $(document).ready(function() {
     // function populateArticleTemplate(template, article) {
     //
     //
-    //     runSlideshow();
+    //     newsSlideshow();
     // }
 
 
@@ -488,30 +501,20 @@ $(document).ready(function() {
 
 
     function getNews() {
-        // if (!news.template) {
-        //     $.get(news.templateURL)
-        //         .done(function(response) {
-        //             news.template = response;
-        //         }).fail(function() {
-        //             console.error("Failed to fetch template");
-        //         });
-        // }
-
         $.get(randNewsAPIurl())
             .done(function(response) {
                 var articles =  response.articles,
                     source = response.source;
                     // articlePromises = [];
                 // console.log(articles[0]);
-                createTitle(news.sources[source]);
-
                 for (var i = 0; i < articles.length; i++) {
                     // articlePromises.push(
                     createArticle(articles[i], source);
                     // );
                 }
-                // Promise.all(articlePromises).then(runSlideshow);
-                runSlideshow();
+                createTitle(news.sources[source])
+                    .then(newsSlideshow);
+                // Promise.all(articlePromises).then(newsSlideshow);
             }).fail(function() {
                 console.error("Failed to fetch news");
                 // TODO: retry request with new URL
@@ -532,26 +535,27 @@ $(document).ready(function() {
                 createWeatherView(response.list, title);
                 // colorInTemperatures();
                 // rotateWeatherVanes();
+            }).fail(function() {
+                console.error("Failed to fetch weather");
             });
     }
 
-    function runSlideshow() {
-        var title = $(".title");
-        title.on("animationend webkitAnimationEnd oAnimationEnd oanimationend MSAnimationEnd", function(event) {
-            if (event.originalEvent.animationName == "wipe-text") {
-                title.fadeOut(0)
-                    .promise().done(function() {
-                        var articles = $(".article");
-                        articles.each(function() {
-                            var textElements = $(this).find(".text");
-                            // console.log(textElements[0].innerHTML);
-                            $(this).slideshow(fadeTime, textElements);
-                        });
-                    });
-            }
+    function newsSlideshow() {
+        var articles = $(".article");
+        articles.each(function() {
+            var textElements = $(this).find(".text");
+            // console.log(textElements[0].innerHTML);
+            $(this).slideshow(fadeTime, textElements);
         });
         // console.log("running slide show");
+    }
 
+    function weatherSlideshow() {
+        for (var round = 0; round < weatherFormat.numRounds; round++) {
+            for (var row = 0; row < weatherFormat.numInEach; row++) {
+                // TODO:
+            }
+        }
     }
 
     function refresh() {
