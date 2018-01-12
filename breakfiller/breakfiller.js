@@ -414,7 +414,7 @@ $(document).ready(function() {
     };
 
 
-    function createTitle(titleText) {
+    function displayTitle(titleText) {
         return new Promise(function(resolve, reject) {
             var content = {
                 title: titleText
@@ -452,21 +452,41 @@ $(document).ready(function() {
             category: title,
             logoSrc: "img/openweathermap.svg",
             windVaneSrc: "img/wind-vane.svg",
-            rows: []
-        };
-        weatherData.forEach(function(row) {
-            content.rows.push({
-                city: row.name,
-                iconSrc: getWeatherIconURL(row),
-                description: row.weather[0].description,
-                temp: kelToCel(row.main.temp),
-                tempColor: tempToHsl(kelToCel(row.main.temp)),
-                wind: {
-                    direction: row.wind.deg,
-                    speed: mpsToMph(row.wind.speed)
-                }
+            slides: []
+        },
+            row = 0;
+        for (var slide = 0; slide < weatherFormat.numRounds; slide++) {
+            content.slides.push({
+                rows: []
             });
-        });
+            for (; row < weatherFormat.numInEach * (slide + 1); row++) {
+                var rowData = weatherData[row];
+                content.slides[slide].rows.push({
+                    city: rowData.name,
+                    iconSrc: getWeatherIconURL(rowData),
+                    description: rowData.weather[0].description,
+                    temp: kelToCel(rowData.main.temp),
+                    tempColor: tempToHsl(kelToCel(rowData.main.temp)),
+                    wind: {
+                        direction: rowData.wind.deg,
+                        speed: mpsToMph(rowData.wind.speed)
+                    }
+                });
+            }
+        }
+        // weatherData.forEach(function(row) {
+        //     content.rows.push({
+        //         city: row.name,
+        //         iconSrc: getWeatherIconURL(row),
+        //         description: row.weather[0].description,
+        //         temp: kelToCel(row.main.temp),
+        //         tempColor: tempToHsl(kelToCel(row.main.temp)),
+        //         wind: {
+        //             direction: row.wind.deg,
+        //             speed: mpsToMph(row.wind.speed)
+        //         }
+        //     });
+        // });
         var weatherHtml = Mustache.render(templates.weather, content);
         $(mainDiv).append(weatherHtml);
     }
@@ -512,7 +532,7 @@ $(document).ready(function() {
                     createArticle(articles[i], source);
                     // );
                 }
-                createTitle(news.sources[source])
+                displayTitle(news.sources[source])
                     .then(newsSlideshow);
                 // Promise.all(articlePromises).then(newsSlideshow);
             }).fail(function() {
@@ -531,8 +551,10 @@ $(document).ready(function() {
         $.get(randWeatherAPIurl())
             .done(function(response) {
                 console.log(response.list);
-                createTitle(title);
-                createWeatherView(response.list, title);
+                createWeatherView(response.list, title)
+                displayTitle(title)
+                    .then(weatherSlideshow);
+
                 // colorInTemperatures();
                 // rotateWeatherVanes();
             }).fail(function() {
@@ -551,9 +573,10 @@ $(document).ready(function() {
     }
 
     function weatherSlideshow() {
+        $(".weather").fadeTo(fadeTime, 1);
         for (var round = 0; round < weatherFormat.numRounds; round++) {
             for (var row = 0; row < weatherFormat.numInEach; row++) {
-                // TODO:
+                // TODO: fadeTo the table rows, then fadeout that tbody/slide, then fadeTo next tbody/slide etc
             }
         }
     }

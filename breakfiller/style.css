@@ -199,6 +199,7 @@ body {
 
 .weather {
   width: 100%;
+  display: none;
 }
 .weather .top-bar {
   border-bottom: 5px solid transparent;
@@ -213,8 +214,15 @@ body {
 .weather thead {
   display: none;
 }
+.weather tbody {
+  display: none;
+}
+.weather tbody:first-of-type {
+  display: table-row-group;
+}
 .weather tr {
   display: flex;
+  opacity: 0;
   justify-content: space-between;
   align-items: center;
   margin: 40px 0;
