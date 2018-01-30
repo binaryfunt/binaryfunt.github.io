@@ -256,6 +256,9 @@ $(document).ready(function() {
         }
         return 2 * sum / Math.sqrt(3.14159265358979);
     }
+    function wait(delay) {
+        return new Promise(resolve => setTimeout(resolve, delay));
+    }
 
     function mpsToMph(speed) {
         return Math.round(speed*3600 / 1609);
@@ -551,7 +554,7 @@ $(document).ready(function() {
         $.get(randWeatherAPIurl())
             .done(function(response) {
                 console.log(response.list);
-                createWeatherView(response.list, title)
+                createWeatherView(response.list, title);
                 displayTitle(title)
                     .then(weatherSlideshow);
 
@@ -573,10 +576,20 @@ $(document).ready(function() {
     }
 
     function weatherSlideshow() {
-        $(".weather").fadeTo(fadeTime, 1);
-        for (var round = 0; round < weatherFormat.numRounds; round++) {
-            for (var row = 0; row < weatherFormat.numInEach; row++) {
-                // TODO: fadeTo the table rows, then fadeout that tbody/slide, then fadeTo next tbody/slide etc
+        $(".weather").fadeTo(fadeTime, 1)
+            .promise().done(function() {
+                run();
+            });
+
+        async function run() { // jshint ignore:line
+            for (var round = 0; round < weatherFormat.numRounds; round++) {
+                var thisSlide = $(".weather tbody")[round];
+                for (var row = 0; row < weatherFormat.numInEach; row++) {
+                    // TODO: fadeTo the table rows, then fadeout that tbody/slide, then fadeTo next tbody/slide etc
+                    var thisRow = $(thisSlide).children("tr")[row];
+                    $(thisRow).fadeTo(fadeTime, 1);
+                    await wait(200); // jshint ignore:line
+                }
             }
         }
     }
