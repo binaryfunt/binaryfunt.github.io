@@ -13,3 +13,7 @@ Archived version of the [Imperial College Physics Society website](https://physo
 Public preview of dielectric boundary visualisation (out of date).
 
 A static version of the Jupyter iPython Notebook is viewable [here](https://nbviewer.jupyter.org/urls/binaryfunt.github.io/imperial-visualisations/notebook/boundaries.ipynb?flush_cache=true). The Notebook can be downloaded [here](https://binaryfunt.github.io/imperial-visualisations/notebook/boundaries.ipynb).
+
+## [Langton's Ant](https://binaryfunt.github.io/langton-ant/index.html)
+
+[Langton's ant](http://mathworld.wolfram.com/LangtonsAnt.html) thrown together in an evening to refresh my JavaScript skills
