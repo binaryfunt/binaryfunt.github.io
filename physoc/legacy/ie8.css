@@ -1,0 +1,71 @@
+#compat-banner {
+  background: #FDDE5A;
+  padding: 20px 0;
+  text-align: center;
+}
+#new-site-banner {
+  display: none;
+}
+
+#home-slider, #slider-replace {
+  display: none;
+}
+.quick-link {
+  text-align: center;
+}
+.event {
+  display: inline-block;
+}
+.event-cal {
+  text-align: center;
+}
+.event-links a {
+  display: block;
+}
+.event-links a span, .quick-link {
+  display: inline-block;
+}
+.person {
+  display: inline-block;
+}
+
+
+#twitter-profile-sidebar {
+  width: 100%;
+  width: auto !important;
+  margin: 0 20px 20px;
+}
+#twitter-profile-card {
+  width: auto;
+  max-width: 600px;
+}
+.twitter-card-header {
+  display: block;
+  height: auto;
+}
+.twitter-card-header > * {
+  display: inline-block;
+  vertical-align: top;
+}
+.twitter-card-details .info-container > div {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.tweet {
+  max-width: 600px;
+}
+.tweet .user {
+  display: block;
+}
+.tweet .user > * {
+  display: inline-block;
+  vertical-align: top;
+}
+.tweet .youtube-thumbnail {
+  height: 4px;
+  background: #CD201F;
+}
+.tweet .media {
+  display: none;
+}
